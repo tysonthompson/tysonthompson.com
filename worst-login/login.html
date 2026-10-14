@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A fictional login prototype for a design assignment.">
+  <title>Sign in · Ordinary</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="header"><a class="brand" href="./" aria-label="Ordinary home"><span class="brand-mark" aria-hidden="true">o.</span>ordinary</a><span class="badge">DESIGN LAB / 01</span></header>
+  <main>
+    <section class="login-card" aria-labelledby="heading">
+      <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg></div>
+      <p class="eyebrow">YOUR EVERYDAY WORKSPACE</p>
+      <h1 id="heading">Welcome back.</h1>
+      <p class="intro">A little less friction. A little more focus.</p>
+      <form id="login-form" novalidate>
+        <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="off" required aria-describedby="email-error"><p class="error" id="email-error"></p></div>
+        <div class="field"><label for="password">Password</label><div class="password-wrap"><input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="off" required aria-describedby="password-error"><button id="show-password" class="show-password" type="button" aria-label="Show password" aria-pressed="false">Show</button></div><p class="error" id="password-error"></p></div>
+        <button class="submit" type="submit">Sign in <span aria-hidden="true">→</span></button>
+        <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+      <div id="success" hidden><p class="success-text">You're signed in.</p><p class="intro">You made it to the demo workspace.</p><button id="sign-out" class="submit" type="button">Back to sign in <span aria-hidden="true">↩</span></button></div>
+      <aside class="demo-note"><span class="demo-dot" aria-hidden="true"></span><div><strong>Just a prototype.</strong><p>Use <b>demo@example.com</b> and <b>password123</b>.<br>No account needed. Nothing is sent or saved.</p></div></aside>
+    </section>
+  </main>
+  <footer><span>Ordinary © 2026</span><span>An intentionally ordinary starting point.</span><span>CLASSROOM PROTOTYPE</span></footer>
+</body>
+</html>
