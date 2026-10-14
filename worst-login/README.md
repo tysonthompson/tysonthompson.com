@@ -10,4 +10,4 @@ Files: `index.html` (structure), `styles.css` (isolated styling), `script.js` (v
 
 The entry page (`index.html`) offers Easy, Medium, and Hard. All link to the same `login.html`, with a `difficulty` query parameter reserved for future behavior. No difficulty-specific challenges are implemented. The Ordinary logo returns to the difficulty selection.
 
-All difficulty modes now use green Cancel (returns to difficulty selection) and red Accept (submits). Any invalid submission displays errors for two seconds, then clears both fields. Input is temporarily disabled during that delay to avoid erasing newly typed corrections. The error remains visible after clearing, and correct demo credentials still succeed.
+All difficulty modes now use green Cancel (returns to difficulty selection) and red Accept (submits). Any invalid submission immediately clears both fields. The error remains visible after clearing, and correct demo credentials still succeed.
