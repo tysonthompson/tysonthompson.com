@@ -228,6 +228,27 @@ img {
   max-width: 800px;
 }
 
+.hero__motion {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 2;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border-hover);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.hero__motion:hover,
+.hero__motion:focus-visible {
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+
 .hero__greeting {
   font-size: 1.125rem;
   color: var(--color-primary);

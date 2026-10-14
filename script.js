@@ -41,6 +41,9 @@
   const context = canvas?.getContext('2d');
   if (!context) return;
 
+  const motionToggle = document.querySelector('.hero__motion');
+  let motionEnabled = !reducedMotion.matches;
+
   let width = 0;
   let height = 0;
   let particles = [];
@@ -107,7 +110,11 @@
     if (frame !== null) window.cancelAnimationFrame(frame);
     frame = null;
     lastTime = null;
-    if (!reducedMotion.matches && !document.hidden && inView) {
+    if (motionToggle) {
+      motionToggle.textContent = motionEnabled ? 'Pause background animation' : 'Play background animation';
+      motionToggle.setAttribute('aria-pressed', String(motionEnabled));
+    }
+    if (motionEnabled && !document.hidden && inView) {
       frame = window.requestAnimationFrame(animate);
     }
   }
@@ -115,7 +122,17 @@
   resize();
   window.addEventListener('resize', resize);
   document.addEventListener('visibilitychange', updateAnimation);
-  reducedMotion.addEventListener('change', updateAnimation);
+  reducedMotion.addEventListener('change', () => {
+    motionEnabled = !reducedMotion.matches;
+    updateAnimation();
+  });
+  if (motionToggle) {
+    motionToggle.hidden = false;
+    motionToggle.addEventListener('click', () => {
+      motionEnabled = !motionEnabled;
+      updateAnimation();
+    });
+  }
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(entries => {
       inView = entries[0].isIntersecting;
