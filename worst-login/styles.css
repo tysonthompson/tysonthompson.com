@@ -7,3 +7,11 @@
 .difficulty-option:hover{background:#f2f6ed;border-color:#7c9b6c}
 .difficulty-number{font-size:11px;color:var(--muted);font-weight:400;font-variant-numeric:tabular-nums}
 .difficulty-arrow{margin-left:auto;color:var(--green);font-size:20px}
+
+.form-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions .cancel{background:#268044;justify-content:center}
+.form-actions .cancel:hover{background:#1d6535}
+.form-actions .accept{background:#ba3835}
+.form-actions .accept:hover{background:#982d2b}
+.form-actions button:disabled{opacity:.6;cursor:wait}
+input:disabled{opacity:.7}

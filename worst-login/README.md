@@ -9,3 +9,5 @@ This is a browser-only classroom prototype. No authentication service, requests,
 Files: `index.html` (structure), `styles.css` (isolated styling), `script.js` (validation, demo authentication, UI events). `authenticate` is the seam for future login-flow changes. Future difficulty settings and challenge features can be introduced separately; none are enabled or implemented yet.
 
 The entry page (`index.html`) offers Easy, Medium, and Hard. All link to the same `login.html`, with a `difficulty` query parameter reserved for future behavior. No difficulty-specific challenges are implemented. The Ordinary logo returns to the difficulty selection.
+
+All difficulty modes now use green Cancel (returns to difficulty selection) and red Accept (submits). Any invalid submission displays errors for two seconds, then clears both fields. Input is temporarily disabled during that delay to avoid erasing newly typed corrections. The error remains visible after clearing, and correct demo credentials still succeed.

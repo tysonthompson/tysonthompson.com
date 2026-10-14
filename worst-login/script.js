@@ -10,6 +10,27 @@
   const visibilityButton = document.querySelector('#show-password');
   const message = document.querySelector('#form-message');
   const success = document.querySelector('#success');
+  const accept = document.querySelector('#accept-login');
+  let clearTimer = null;
+
+  function rejectAttempt(reason) {
+    message.textContent = `${reason} Both fields will be cleared in 2 seconds.`;
+    email.disabled = password.disabled = accept.disabled = true;
+    clearTimer = window.setTimeout(() => {
+      form.reset();
+      hidePassword();
+      email.disabled = password.disabled = accept.disabled = false;
+      clearTimer = null;
+      message.textContent = `${reason} Both fields were cleared. Start again.`;
+      email.focus();
+    }, 2000);
+  }
+
+  document.querySelector('#cancel-login').addEventListener('click', () => {
+    window.clearTimeout(clearTimer);
+    form.reset();
+    window.location.href = './';
+  });
 
   function setError(input, text) {
     input.setAttribute('aria-invalid', String(Boolean(text)));
@@ -54,11 +75,14 @@
 
   form.addEventListener('submit', event => {
     event.preventDefault();
+    if (clearTimer !== null) return;
     message.textContent = '';
-    if (!validate()) return;
+    if (!validate()) {
+      rejectAttempt('Check the input errors above.');
+      return;
+    }
     if (!authenticate(email.value, password.value)) {
-      message.textContent = 'Email or password is incorrect. Try the demo credentials below.';
-      password.focus();
+      rejectAttempt('Email or password is incorrect.');
       return;
     }
     form.reset();

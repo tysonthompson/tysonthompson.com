@@ -19,7 +19,10 @@
       <form id="login-form" novalidate>
         <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="off" required aria-describedby="email-error"><p class="error" id="email-error"></p></div>
         <div class="field"><label for="password">Password</label><div class="password-wrap"><input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="off" required aria-describedby="password-error"><button id="show-password" class="show-password" type="button" aria-label="Show password" aria-pressed="false">Show</button></div><p class="error" id="password-error"></p></div>
-        <button class="submit" type="submit">Sign in <span aria-hidden="true">→</span></button>
+        <div class="form-actions">
+          <button id="cancel-login" class="submit cancel" type="button">Cancel</button>
+          <button id="accept-login" class="submit accept" type="submit">Accept <span aria-hidden="true">→</span></button>
+        </div>
         <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
       </form>
       <div id="success" hidden><p class="success-text">You're signed in.</p><p class="intro">You made it to the demo workspace.</p><button id="sign-out" class="submit" type="button">Back to sign in <span aria-hidden="true">↩</span></button></div>
