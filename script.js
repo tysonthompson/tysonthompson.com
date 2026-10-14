@@ -42,7 +42,7 @@
   if (!context) return;
 
   const motionToggle = document.querySelector('.hero__motion');
-  let motionEnabled = !reducedMotion.matches;
+  let motionEnabled = true;
 
   let width = 0;
   let height = 0;
@@ -122,10 +122,6 @@
   resize();
   window.addEventListener('resize', resize);
   document.addEventListener('visibilitychange', updateAnimation);
-  reducedMotion.addEventListener('change', () => {
-    motionEnabled = !reducedMotion.matches;
-    updateAnimation();
-  });
   if (motionToggle) {
     motionToggle.hidden = false;
     motionToggle.addEventListener('click', () => {
