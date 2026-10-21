@@ -1,13 +1,44 @@
-# Worst Login — base prototype
+# Worst Login
 
-Open `index.html` directly or visit `/worst-login/` when deployed with the portfolio.
+Visit `/worst-login/` and choose Easy, Medium, or Hard. For a local preview from the repository root:
 
-Demo login: `demo@example.com` / `password123`.
+```sh
+python -m http.server 8000
+```
 
-This is a browser-only classroom prototype. No authentication service, requests, credential storage, or password-reset flow is included. Validation, password visibility, demo success, and returning to the form work locally.
+Open `http://localhost:8000/worst-login/`. Demo login: `demo@example.com` / `password123`.
 
-Files: `index.html` (structure), `styles.css` (isolated styling), `script.js` (validation, demo authentication, UI events). `authenticate` is the seam for future login-flow changes. Future difficulty settings and challenge features can be introduced separately; none are enabled or implemented yet.
+This is a browser-only classroom prototype, not an authentication service. Credentials are checked only in this page and are never sent to the CAPTCHA frames or saved. The externally hosted challenges need an internet connection; opening the HTML directly also requires that connection.
 
-The entry page (`index.html`) offers Easy, Medium, and Hard. All link to the same `login.html`, with a `difficulty` query parameter reserved for future behavior. No difficulty-specific challenges are implemented. The Ordinary logo returns to the difficulty selection.
+## Difficulties and credits
 
-All difficulty modes now use green Cancel (returns to difficulty selection) and red Accept (submits). Any invalid submission immediately clears both fields. The error remains visible after clearing, and correct demo credentials still succeed.
+| Mode | Challenge | Author | How to complete it |
+| --- | --- | --- | --- |
+| Easy | [Crow Lifting Weights](https://github.com/CourageousMayonnaise/codejam25-crow-lifting-weights) | CourageousMayonnaise | Click inside and type LIFT, or tap the letters on a touchscreen. A wrong letter resets the lift. |
+| Medium | [Shell Game](https://github.com/aPatchyy/ShellGameCaptcha) | aPatchyy | Track the coin through three rounds of shuffling wallets. |
+| Hard | [Cooking CAPTCHA](https://github.com/wesbos/Kitboga-captcha) | Wes Bos | Drag six foods onto/off the grill within their cooking-time tolerances. Includes sound. |
+
+These come from [Kitboga's 2025 CAPTCHA Code Jam](https://github.com/The-Kitboga-Show/codejam25). Crow Lifting Weights is an official example linked by the competition; Shell Game and Cooking CAPTCHA are community submissions. These labels do not imply they were finalists or winners.
+
+The repositories publish their code but do not include a general redistribution license. Their competition terms grant rights specifically to The Kitboga Show. This project therefore embeds the authors' public demos and links their source, rather than copying their code or assets.
+
+Reviewed source snapshots on October 20, 2026:
+
+- [Crow: 6f0480f](https://github.com/CourageousMayonnaise/codejam25-crow-lifting-weights/tree/6f0480f539dec6af324207aacc06277d1503f41b/captcha)
+- [Shell Game: 66bff49](https://github.com/aPatchyy/ShellGameCaptcha/tree/66bff49d15faf03498f13a70c0561c028fd55579/captcha)
+- [Cooking: 6fb3e11](https://github.com/wesbos/Kitboga-captcha/tree/6fb3e112826ef00a2050ffe25e3fd17ad3dcd34f/captcha)
+
+The live demos are not pinned and can change or become unavailable. Their URLs are in `script.js`. GitHub Pages serves the games and their assets; some games also load fonts. If a challenge fails to load, the page offers a restart hint and keeps sign-in blocked.
+
+## Login behavior
+
+- Missing or unrecognized `difficulty` values use Easy.
+- Correct demo credentials **and** completion of the current CAPTCHA are required.
+- Green **Cancel** returns to difficulty selection; red **Accept** submits.
+- Any rejected submission clears both fields, hides the password, and replaces the CAPTCHA with a fresh attempt.
+- Restarting or returning from the success screen also requires a fresh CAPTCHA. Restarting alone preserves the entered credentials.
+- Successful verification removes the game frame to stop its audio/animations. Verification applies to that attempt only.
+
+Each challenge uses a sandboxed `allow-scripts` iframe with no same-origin privilege and no referrer. A completion is accepted only for the exact string `success` from the current frame's window with its expected opaque origin. No credentials are passed to a frame. The native 400×300 (Easy) or 390×300 (Medium/Hard) stage scales down to fit narrow screens.
+
+Files: `index.html` (difficulty selection), `login.html` (form and challenge shell), `styles.css` (isolated styling), `script.js` (configuration, challenge lifecycle, and demo login).

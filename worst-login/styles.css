@@ -7,6 +7,27 @@
 .difficulty-option:hover{background:#f2f6ed;border-color:#7c9b6c}
 .difficulty-number{font-size:11px;color:var(--muted);font-weight:400;font-variant-numeric:tabular-nums}
 .difficulty-arrow{margin-left:auto;color:var(--green);font-size:20px}
+.difficulty-copy{display:grid;gap:5px}
+.difficulty-copy small{font-size:11px;line-height:1.5;font-weight:400;color:var(--muted)}
+
+/* Keep each author's CAPTCHA contained in a 400 × 300 stage. */
+.login-card--challenge{max-width:500px}
+.difficulty-label{display:inline-block;margin:-10px 0 24px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;color:var(--green);font-size:10px;letter-spacing:1px;font-weight:600;text-transform:uppercase}
+.captcha{margin:25px 0 24px;padding-top:23px;border-top:1px solid #edf0e9;min-width:0}
+.captcha-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.captcha-heading h2{margin:0;font-size:15px;line-height:1.4;font-weight:600;letter-spacing:-.2px}
+.captcha-required{color:var(--muted);font-size:8px;letter-spacing:1px;flex-shrink:0}
+.captcha-description{font-size:12px;color:var(--muted);line-height:1.6;margin:8px 0 10px}
+.captcha-status{font-size:11px;line-height:1.5;color:var(--green);margin:0 0 12px}
+.captcha-stage{position:relative;width:100%;max-width:400px;height:300px;margin-inline:auto;overflow:hidden;background:#f7f8f4;border-radius:7px;outline:1px solid var(--border)}
+.captcha-viewport{position:absolute;top:0;left:0;width:400px;height:300px;transform-origin:top left;background:white}
+#captcha-frame{display:block;border:0;width:400px;height:300px;background:white}
+.captcha-tools{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:13px;font-size:11px}
+.restart-captcha{border:1px solid var(--border);border-radius:5px;background:#fcfdfb;color:var(--green);padding:7px 9px;font-size:11px}
+.restart-captcha:hover{background:#f2f6ed;border-color:#7c9b6c}
+#captcha-source{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+#captcha-source:hover{color:var(--green)}
+.captcha-help{margin:12px 0 0;color:#ad392f;font-size:11px;line-height:1.6}
 
 .form-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-actions .cancel{background:#268044;justify-content:center}
