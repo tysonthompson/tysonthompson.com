@@ -34,8 +34,9 @@ The live demos are not pinned and can change or become unavailable. Their URLs a
 
 - Missing or unrecognized `difficulty` values use Easy.
 - Correct demo credentials **and** completion of the current CAPTCHA are required.
+- Accept with correct credentials waits for CAPTCHA confirmation without clearing the fields or restarting the game, then completes sign-in automatically. This preserves Medium's three-second delay between its final “Verified” banner and its completion message. Editing either credential or restarting the challenge cancels that pending sign-in.
 - Green **Cancel** returns to difficulty selection; red **Accept** submits.
-- Any rejected submission clears both fields, hides the password, and replaces the CAPTCHA with a fresh attempt.
+- Invalid or incorrect credentials clear both fields, hide the password, and replace the CAPTCHA with a fresh attempt.
 - Restarting or returning from the success screen also requires a fresh CAPTCHA. Restarting alone preserves the entered credentials.
 - Successful verification removes the game frame to stop its audio/animations. Verification applies to that attempt only.
 

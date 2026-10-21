@@ -10,6 +10,8 @@
   const visibilityButton = document.querySelector('#show-password');
   const message = document.querySelector('#form-message');
   const success = document.querySelector('#success');
+  const acceptButton = document.querySelector('#accept-login');
+  const acceptLabel = acceptButton.innerHTML;
   // Published Code Jam demos are embedded without redistributing their source.
   // See README.md for authors, source snapshots, and hosting dependencies.
   const challenges = {
@@ -24,7 +26,7 @@
     medium: {
       name: 'Shell Game',
       author: 'aPatchyy',
-      description: 'Keep track of the coin while the wallets shuffle. Pick the right wallet through three rounds to earn the privilege of signing in.',
+      description: 'Track the coin through all three rounds. Each round says “Success”; the final round says “Verified”. Accept will wait for the game’s confirmation.',
       url: 'https://apatchyy.github.io/ShellGameCaptcha/captcha/captcha.html',
       source: 'https://github.com/aPatchyy/ShellGameCaptcha',
       width: 390,
@@ -48,6 +50,7 @@
   const frameTemplate = document.querySelector('#captcha-frame').cloneNode(false);
   let captchaFrame = null;
   let captchaVerified = false;
+  let loginPending = false;
   let helpTimer;
 
   document.querySelector('#difficulty-label').textContent = `${difficulty} / Human verification`;
@@ -73,8 +76,16 @@
     captchaFrame = null;
   }
 
+  function setLoginPending(pending) {
+    loginPending = pending;
+    acceptButton.disabled = pending;
+    if (pending) acceptButton.textContent = 'Waiting for CAPTCHA…';
+    else acceptButton.innerHTML = acceptLabel;
+  }
+
   function resetChallenge() {
     stopChallenge();
+    setLoginPending(false);
     captchaVerified = false;
     captchaStage.hidden = false;
     captchaHelp.hidden = true;
@@ -85,7 +96,7 @@
     frame.style.width = `${challenge.width}px`;
     frame.title = `${difficulty} CAPTCHA: ${challenge.name}`;
     frame.addEventListener('load', () => {
-      if (frame !== captchaFrame) return;
+      if (frame !== captchaFrame || loginPending) return;
       captchaStatus.textContent = 'Complete the challenge below to unlock sign in.';
     });
     frame.addEventListener('error', () => {
@@ -106,12 +117,15 @@
     // Never trust an unrelated frame, a prior attempt, or a generic message object.
     if (!captchaFrame || form.hidden || event.source !== captchaFrame.contentWindow ||
         event.origin !== 'null' || event.data !== 'success') return;
+    const shouldSignIn = loginPending;
+    setLoginPending(false);
     captchaVerified = true;
     stopChallenge();
     captchaStage.hidden = true;
     captchaHelp.hidden = true;
     captchaStatus.textContent = 'Human enough. You may now Accept.';
-    document.querySelector('#accept-login').focus();
+    if (shouldSignIn) form.requestSubmit();
+    else acceptButton.focus();
   });
 
   document.querySelector('#reload-captcha').addEventListener('click', resetChallenge);
@@ -173,6 +187,10 @@
   });
 
   [email, password].forEach(input => input.addEventListener('input', () => {
+    if (loginPending) {
+      setLoginPending(false);
+      captchaStatus.textContent = 'Complete the challenge below to unlock sign in.';
+    }
     setError(input, '');
     message.textContent = '';
   }));
@@ -189,7 +207,10 @@
       return;
     }
     if (!captchaVerified) {
-      rejectAttempt('Complete the CAPTCHA before accepting.');
+      // Some games display their win before sending the completion message.
+      // Preserve that frame and its callback; continue this submit when it arrives.
+      setLoginPending(true);
+      captchaStatus.textContent = 'Waiting for the game to confirm completion. Finish every round; sign in will continue automatically.';
       return;
     }
     form.reset();
