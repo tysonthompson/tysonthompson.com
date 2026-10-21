@@ -128,7 +128,10 @@
     else acceptButton.focus();
   });
 
-  document.querySelector('#reload-captcha').addEventListener('click', resetChallenge);
+  document.querySelector('#reload-captcha').addEventListener('click', () => {
+    message.textContent = '';
+    resetChallenge();
+  });
   if ('ResizeObserver' in window) {
     new ResizeObserver(resizeChallenge).observe(captchaStage);
   } else {
@@ -139,8 +142,14 @@
   function rejectAttempt(reason) {
     form.reset();
     hidePassword();
-    resetChallenge();
-    message.textContent = `${reason} Both fields were cleared and the CAPTCHA was reset. Start again.`;
+    // Credential errors must not revoke a completed challenge or restart a game.
+    // Only an explicit restart or a new login session resets verification.
+    if (loginPending && !captchaVerified) {
+      captchaStatus.textContent = 'Complete the challenge below, then enter your credentials and Accept.';
+    }
+    setLoginPending(false);
+    const verificationMessage = captchaVerified ? 'Your CAPTCHA is still verified.' : 'Your CAPTCHA progress was kept.';
+    message.textContent = `${reason} Both fields were cleared. ${verificationMessage}`;
     email.focus();
   }
 
@@ -203,7 +212,7 @@
       return;
     }
     if (!authenticate(email.value, password.value)) {
-      rejectAttempt('Email or password is incorrect.');
+      rejectAttempt('Email or password is incorrect. Use demo@example.com and password123.');
       return;
     }
     if (!captchaVerified) {

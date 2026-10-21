@@ -36,9 +36,9 @@ The live demos are not pinned and can change or become unavailable. Their URLs a
 - Correct demo credentials **and** completion of the current CAPTCHA are required.
 - Accept with correct credentials waits for CAPTCHA confirmation without clearing the fields or restarting the game, then completes sign-in automatically. This preserves Medium's three-second delay between its final “Verified” banner and its completion message. Editing either credential or restarting the challenge cancels that pending sign-in.
 - Green **Cancel** returns to difficulty selection; red **Accept** submits.
-- Invalid or incorrect credentials clear both fields, hide the password, and replace the CAPTCHA with a fresh attempt.
+- Invalid or incorrect credentials clear both fields and hide the password, but preserve CAPTCHA progress and completed verification. Fix the credentials and Accept without replaying a passed challenge. The error identifies the required demo credentials.
 - Restarting or returning from the success screen also requires a fresh CAPTCHA. Restarting alone preserves the entered credentials.
-- Successful verification removes the game frame to stop its audio/animations. Verification applies to that attempt only.
+- Successful verification removes the game frame to stop its audio/animations. It stays valid through credential retries, until an explicit challenge restart or a new login session.
 
 Each challenge uses a sandboxed `allow-scripts` iframe with no same-origin privilege and no referrer. A completion is accepted only for the exact string `success` from the current frame's window with its expected opaque origin. No credentials are passed to a frame. The native 400×300 (Easy) or 390×300 (Medium/Hard) stage scales down to fit narrow screens.
 
