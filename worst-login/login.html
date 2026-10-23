@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A fictional login prototype for a design assignment.">
   <title>Sign in · Ordinary</title>
-  <link rel="stylesheet" href="styles.css?v=20261023-visible-credentials">
-  <script src="script.js?v=20261021-keep-verification" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20261023-verification-dialog">
+  <script src="script.js?v=20261023-verification-dialog" defer></script>
 </head>
 <body>
   <header class="header"><a class="brand" href="./" aria-label="Ordinary home"><span class="brand-mark" aria-hidden="true">o.</span>ordinary</a><span class="badge">DESIGN LAB / 01</span></header>
@@ -16,11 +16,11 @@
       <p class="eyebrow">YOUR EVERYDAY WORKSPACE</p>
       <h1 id="heading">Welcome back.</h1>
       <p class="intro">A little less friction. A little more focus.</p>
-      <p id="difficulty-label" class="difficulty-label">Human verification</p>
+      <p id="difficulty-label" class="difficulty-label">Sign in</p>
       <form id="login-form" novalidate>
         <aside class="demo-credentials" aria-labelledby="demo-credentials-title">
           <h2 id="demo-credentials-title">Demo sign-in details</h2>
-          <p>Enter these exactly, then complete the CAPTCHA.</p>
+          <p>Enter these details to sign in.</p>
           <dl>
             <div><dt>Email address</dt><dd><code>demo@example.com</code></dd></div>
             <div><dt>Password</dt><dd><code>password123</code></dd></div>
@@ -28,17 +28,6 @@
         </aside>
         <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="off" required aria-describedby="email-error"><p class="error" id="email-error"></p></div>
         <div class="field"><label for="password">Password</label><div class="password-wrap"><input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="off" required aria-describedby="password-error"><button id="show-password" class="show-password" type="button" aria-label="Show password" aria-pressed="false">Show</button></div><p class="error" id="password-error"></p></div>
-        <section class="captcha" aria-labelledby="captcha-title" aria-describedby="captcha-description">
-          <div class="captcha-heading"><h2 id="captcha-title">One tiny CAPTCHA.</h2><span class="captcha-required">REQUIRED</span></div>
-          <p id="captcha-description" class="captcha-description">Complete the challenge to prove you are human.</p>
-          <p id="captcha-status" class="captcha-status" role="status" aria-live="polite">Loading your challenge…</p>
-          <div id="captcha-stage" class="captcha-stage">
-            <div id="captcha-viewport" class="captcha-viewport"><iframe id="captcha-frame" title="Human verification challenge" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe></div>
-          </div>
-          <p id="captcha-help" class="captcha-help" hidden>Blank or stuck challenge? Check your connection and restart it. Complete it here to unlock this login.</p>
-          <div class="captcha-tools"><button id="reload-captcha" class="restart-captcha" type="button">Restart challenge</button><a id="captcha-source" target="_blank" rel="noopener noreferrer">Original challenge ↗</a></div>
-          <noscript><p class="captcha-help">JavaScript is required to load the CAPTCHA and use this demo.</p></noscript>
-        </section>
         <div class="form-actions">
           <button id="cancel-login" class="submit cancel" type="button">Cancel</button>
           <button id="accept-login" class="submit accept" type="submit">Accept <span aria-hidden="true">→</span></button>
@@ -46,9 +35,26 @@
         <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
       </form>
       <div id="success" hidden><p class="success-text">You're signed in.</p><p class="intro">You made it to the demo workspace.</p><button id="sign-out" class="submit" type="button">Back to sign in <span aria-hidden="true">↩</span></button></div>
-      <aside class="demo-note"><span class="demo-dot" aria-hidden="true"></span><div><strong>Just a prototype.</strong><p>Demo credentials stay in this page. The CAPTCHA loads from its author's public demo and needs a connection.</p></div></aside>
+      <aside class="demo-note"><span class="demo-dot" aria-hidden="true"></span><div><strong>Just a prototype.</strong><p>Demo credentials stay in this page.</p></div></aside>
     </section>
   </main>
+  <dialog id="captcha-dialog" class="captcha-dialog" aria-labelledby="captcha-dialog-title" aria-describedby="captcha-description">
+    <div class="captcha-dialog-heading">
+      <h2 id="captcha-dialog-title">One more thing.</h2>
+      <button id="close-captcha" class="close-captcha" type="button" autofocus>Back to sign in</button>
+    </div>
+    <section class="captcha" aria-labelledby="captcha-title">
+      <div class="captcha-heading"><h3 id="captcha-title">One tiny CAPTCHA.</h3><span class="captcha-required">REQUIRED</span></div>
+      <p id="captcha-description" class="captcha-description">Complete the challenge to prove you are human.</p>
+      <p id="captcha-status" class="captcha-status" role="status" aria-live="polite">Loading your challenge…</p>
+      <div id="captcha-stage" class="captcha-stage">
+        <div id="captcha-viewport" class="captcha-viewport"><template id="captcha-template"><iframe id="captcha-frame" title="Human verification challenge" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe></template></div>
+      </div>
+      <p id="captcha-help" class="captcha-help" hidden>Blank or stuck challenge? Check your connection and restart it. Complete it here to unlock this login.</p>
+      <div class="captcha-tools"><button id="reload-captcha" class="restart-captcha" type="button">Restart challenge</button><a id="captcha-source" target="_blank" rel="noopener noreferrer">Original challenge ↗</a></div>
+      <noscript><p class="captcha-help">JavaScript is required to load the CAPTCHA and use this demo.</p></noscript>
+    </section>
+  </dialog>
   <footer><span>Ordinary © 2026</span><span>An intentionally ordinary starting point.</span><span>CLASSROOM PROTOTYPE</span></footer>
 </body>
 </html>

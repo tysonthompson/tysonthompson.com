@@ -26,7 +26,7 @@
     medium: {
       name: 'Shell Game',
       author: 'aPatchyy',
-      description: 'Track the coin through all three rounds. Each round says “Success”; the final round says “Verified”. Accept will wait for the game’s confirmation.',
+      description: 'Track the coin through all three rounds. Each round says “Success”; the final round says “Verified”. Sign in will finish after the game confirms completion.',
       url: 'https://apatchyy.github.io/ShellGameCaptcha/captcha/captcha.html',
       source: 'https://github.com/aPatchyy/ShellGameCaptcha',
       width: 390,
@@ -43,17 +43,17 @@
   const requestedDifficulty = new URLSearchParams(window.location.search).get('difficulty');
   const difficulty = Object.hasOwn(challenges, requestedDifficulty) ? requestedDifficulty : 'easy';
   const challenge = challenges[difficulty];
+  const captchaDialog = document.querySelector('#captcha-dialog');
   const captchaStage = document.querySelector('#captcha-stage');
   const captchaViewport = document.querySelector('#captcha-viewport');
   const captchaStatus = document.querySelector('#captcha-status');
   const captchaHelp = document.querySelector('#captcha-help');
-  const frameTemplate = document.querySelector('#captcha-frame').cloneNode(false);
+  const frameTemplate = document.querySelector('#captcha-template').content.firstElementChild;
   let captchaFrame = null;
-  let captchaVerified = false;
   let loginPending = false;
   let helpTimer;
 
-  document.querySelector('#difficulty-label').textContent = `${difficulty} / Human verification`;
+  document.querySelector('#difficulty-label').textContent = `${difficulty} / Sign in`;
   document.querySelector('#captcha-title').textContent = challenge.name;
   document.querySelector('#captcha-description').textContent = challenge.description;
   const sourceLink = document.querySelector('#captcha-source');
@@ -64,7 +64,7 @@
   captchaStage.style.maxWidth = `${challenge.width}px`;
 
   function resizeChallenge() {
-    if (captchaStage.hidden || form.hidden) return;
+    if (!captchaDialog.open || !captchaFrame) return;
     const scale = Math.min(1, captchaStage.clientWidth / challenge.width);
     captchaViewport.style.transform = `scale(${scale})`;
     captchaStage.style.height = `${300 * scale}px`;
@@ -79,15 +79,19 @@
   function setLoginPending(pending) {
     loginPending = pending;
     acceptButton.disabled = pending;
-    if (pending) acceptButton.textContent = 'Waiting for CAPTCHA…';
+    if (pending) acceptButton.textContent = 'Verifying…';
     else acceptButton.innerHTML = acceptLabel;
   }
 
-  function resetChallenge() {
-    stopChallenge();
+  function closeChallenge() {
     setLoginPending(false);
-    captchaVerified = false;
-    captchaStage.hidden = false;
+    stopChallenge();
+    if (captchaDialog.open) captchaDialog.close();
+  }
+
+  function resetChallenge() {
+    if (!captchaDialog.open || !loginPending) return;
+    stopChallenge();
     captchaHelp.hidden = true;
     captchaStatus.textContent = 'Loading your challenge…';
     // A new browsing context also invalidates completion messages from old games.
@@ -96,8 +100,8 @@
     frame.style.width = `${challenge.width}px`;
     frame.title = `${difficulty} CAPTCHA: ${challenge.name}`;
     frame.addEventListener('load', () => {
-      if (frame !== captchaFrame || loginPending) return;
-      captchaStatus.textContent = 'Complete the challenge below to unlock sign in.';
+      if (frame !== captchaFrame) return;
+      captchaStatus.textContent = 'Complete the challenge below. Sign in will finish automatically.';
     });
     frame.addEventListener('error', () => {
       if (frame !== captchaFrame) return;
@@ -115,47 +119,48 @@
   window.addEventListener('message', event => {
     // allow-scripts (without allow-same-origin) gives the demo an opaque origin.
     // Never trust an unrelated frame, a prior attempt, or a generic message object.
-    if (!captchaFrame || form.hidden || event.source !== captchaFrame.contentWindow ||
+    if (!captchaFrame || !captchaDialog.open || !loginPending || form.hidden || event.source !== captchaFrame.contentWindow ||
         event.origin !== 'null' || event.data !== 'success') return;
-    const shouldSignIn = loginPending;
-    setLoginPending(false);
-    captchaVerified = true;
-    stopChallenge();
-    captchaStage.hidden = true;
-    captchaHelp.hidden = true;
-    captchaStatus.textContent = 'Human enough. You may now Accept.';
-    if (shouldSignIn) form.requestSubmit();
-    else acceptButton.focus();
+    // Recheck the accepted details before completing this pending sign-in.
+    if (!authenticate(email.value, password.value)) {
+      rejectAttempt('Email or password is incorrect. Enter the demo details shown above.');
+      return;
+    }
+    closeChallenge();
+    form.reset();
+    hidePassword();
+    form.hidden = true;
+    success.hidden = false;
+    document.querySelector('#sign-out').focus();
   });
 
-  document.querySelector('#reload-captcha').addEventListener('click', () => {
-    message.textContent = '';
-    resetChallenge();
+  document.querySelector('#reload-captcha').addEventListener('click', resetChallenge);
+  document.querySelector('#close-captcha').addEventListener('click', closeChallenge);
+  captchaDialog.addEventListener('cancel', event => {
+    event.preventDefault();
+    closeChallenge();
+  });
+  captchaDialog.addEventListener('close', () => {
+    // A queued close event from an earlier attempt must not stop a reopened one.
+    if (!captchaDialog.open) closeChallenge();
   });
   if ('ResizeObserver' in window) {
     new ResizeObserver(resizeChallenge).observe(captchaStage);
   } else {
     window.addEventListener('resize', resizeChallenge);
   }
-  resetChallenge();
 
   function rejectAttempt(reason) {
+    closeChallenge();
     form.reset();
     hidePassword();
-    // Credential errors must not revoke a completed challenge or restart a game.
-    // Only an explicit restart or a new login session resets verification.
-    if (loginPending && !captchaVerified) {
-      captchaStatus.textContent = 'Complete the challenge below, then enter your credentials and Accept.';
-    }
-    setLoginPending(false);
-    const verificationMessage = captchaVerified ? 'Your CAPTCHA is still verified.' : 'Your CAPTCHA progress was kept.';
-    message.textContent = `${reason} Both fields were cleared. ${verificationMessage}`;
+    message.textContent = `${reason} Both fields were cleared.`;
     email.focus();
   }
 
   document.querySelector('#cancel-login').addEventListener('click', () => {
     form.reset();
-    stopChallenge();
+    closeChallenge();
     window.location.href = './';
   });
 
@@ -196,13 +201,21 @@
   });
 
   [email, password].forEach(input => input.addEventListener('input', () => {
-    if (loginPending) {
-      setLoginPending(false);
-      captchaStatus.textContent = 'Complete the challenge below to unlock sign in.';
-    }
+    if (loginPending) closeChallenge();
     setError(input, '');
     message.textContent = '';
   }));
+
+  // This intentionally awkward prototype requires typing the displayed details.
+  // Cover context menus and drag/drop as well as keyboard clipboard shortcuts.
+  ['copy', 'cut', 'paste', 'dragstart', 'drop'].forEach(type => {
+    form.addEventListener(type, event => event.preventDefault());
+  });
+  form.addEventListener('beforeinput', event => {
+    if (['insertFromPaste', 'insertFromPasteAsQuotation', 'insertFromDrop'].includes(event.inputType)) {
+      event.preventDefault();
+    }
+  });
 
   form.addEventListener('submit', event => {
     event.preventDefault();
@@ -212,42 +225,33 @@
       return;
     }
     if (!authenticate(email.value, password.value)) {
-      rejectAttempt('Email or password is incorrect. Use demo@example.com and password123.');
+      rejectAttempt('Email or password is incorrect. Enter the demo details shown above.');
       return;
     }
-    if (!captchaVerified) {
-      // Some games display their win before sending the completion message.
-      // Preserve that frame and its callback; continue this submit when it arrives.
-      setLoginPending(true);
-      captchaStatus.textContent = 'Waiting for the game to confirm completion. Finish every round; sign in will continue automatically.';
-      return;
-    }
-    form.reset();
-    hidePassword();
-    form.hidden = true;
-    success.hidden = false;
-    document.querySelector('#sign-out').focus();
-  });
-
-  document.querySelector('#sign-out').addEventListener('click', () => {
-    success.hidden = true;
-    form.hidden = false;
-    message.textContent = '';
+    if (loginPending) return;
+    // Do not create or load any external game until the credentials are accepted.
+    captchaDialog.showModal();
+    setLoginPending(true);
     resetChallenge();
-    email.focus();
   });
 
-  // Back/Forward can restore the exact DOM after Cancel has removed its frame.
-  // Treat a restored page as a fresh login, including any prior verification.
-  window.addEventListener('pageshow', event => {
-    if (!event.persisted) return;
+  function resetLogin() {
+    closeChallenge();
     form.reset();
     hidePassword();
     setError(email, '');
     setError(password, '');
-    message.textContent = '';
     success.hidden = true;
     form.hidden = false;
-    resetChallenge();
+    message.textContent = '';
+    email.focus();
+  }
+
+  document.querySelector('#sign-out').addEventListener('click', resetLogin);
+  window.addEventListener('pagehide', closeChallenge);
+
+  // Back/Forward returns to the credential step without loading a challenge.
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) resetLogin();
   });
 })();

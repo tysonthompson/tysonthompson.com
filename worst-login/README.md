@@ -33,12 +33,16 @@ The live demos are not pinned and can change or become unavailable. Their URLs a
 ## Login behavior
 
 - Missing or unrecognized `difficulty` values use Easy.
+- The difficulty menu shows only the mode names. The initial sign-in form displays the demo credentials without revealing the upcoming challenge.
 - Correct demo credentials **and** completion of the current CAPTCHA are required.
-- Accept with correct credentials waits for CAPTCHA confirmation without clearing the fields or restarting the game, then completes sign-in automatically. This preserves Medium's three-second delay between its final “Verified” banner and its completion message. Editing either credential or restarting the challenge cancels that pending sign-in.
+- Accept with correct credentials opens a modal dialog and loads the selected challenge. No game iframe or external challenge request is created before that point. The modal keeps the underlying form inactive and contains keyboard focus.
+- Completing the current challenge signs in automatically. This waits for the game's completion message, including Medium's three-second delay after its final “Verified” banner.
 - Green **Cancel** returns to difficulty selection; red **Accept** submits.
-- Invalid or incorrect credentials clear both fields and hide the password, but preserve CAPTCHA progress and completed verification. Fix the credentials and Accept without replaying a passed challenge. The error identifies the required demo credentials.
-- Restarting or returning from the success screen also requires a fresh CAPTCHA. Restarting alone preserves the entered credentials.
-- Successful verification removes the game frame to stop its audio/animations. It stays valid through credential retries, until an explicit challenge restart or a new login session.
+- Invalid or incorrect credentials clear both fields and hide the password without opening or mentioning a challenge.
+- **Back to sign in** or Escape closes the dialog, removes the game to stop audio/animations, and cancels the pending sign-in while preserving the entered credentials. Accept starts a fresh challenge.
+- **Restart challenge** replaces the current game and continues waiting for completion with the same credentials. Editing credentials cancels a pending attempt.
+- Successful verification removes the game frame. Returning from the success screen or restoring the page with Back/Forward resets to the empty credential form without loading a game.
+- Copy, cut, paste, and drag/drop are blocked within the credential form, and the displayed demo values cannot be selected. Users must type the credentials; normal typing and editing remain available. These are intentional prototype interactions, not a security boundary.
 
 Each challenge uses a sandboxed `allow-scripts` iframe with no same-origin privilege and no referrer. A completion is accepted only for the exact string `success` from the current frame's window with its expected opaque origin. No credentials are passed to a frame. The native 400×300 (Easy) or 390×300 (Medium/Hard) stage scales down to fit narrow screens.
 
