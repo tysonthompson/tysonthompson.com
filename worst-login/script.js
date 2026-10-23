@@ -10,6 +10,9 @@
   const visibilityButton = document.querySelector('#show-password');
   const message = document.querySelector('#form-message');
   const success = document.querySelector('#success');
+  const loginCard = document.querySelector('#login-card');
+  const loginIntro = document.querySelector('#login-intro');
+  const successHeading = document.querySelector('#success-heading');
   const acceptButton = document.querySelector('#accept-login');
   const acceptLabel = acceptButton.innerHTML;
   // Published Code Jam demos are embedded without redistributing their source.
@@ -54,6 +57,7 @@
   let helpTimer;
 
   document.querySelector('#difficulty-label').textContent = `${difficulty} / Sign in`;
+  document.querySelector('#completed-difficulty').textContent = `${difficulty} mode complete`;
   document.querySelector('#captcha-title').textContent = challenge.name;
   document.querySelector('#captcha-description').textContent = challenge.description;
   const sourceLink = document.querySelector('#captcha-source');
@@ -130,8 +134,11 @@
     form.reset();
     hidePassword();
     form.hidden = true;
+    loginIntro.hidden = true;
     success.hidden = false;
-    document.querySelector('#sign-out').focus();
+    loginCard.classList.add('login-card--success');
+    loginCard.setAttribute('aria-labelledby', 'success-heading');
+    successHeading.focus();
   });
 
   document.querySelector('#reload-captcha').addEventListener('click', resetChallenge);
@@ -243,6 +250,9 @@
     setError(password, '');
     success.hidden = true;
     form.hidden = false;
+    loginIntro.hidden = false;
+    loginCard.classList.remove('login-card--success');
+    loginCard.setAttribute('aria-labelledby', 'heading');
     message.textContent = '';
     email.focus();
   }

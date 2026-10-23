@@ -56,3 +56,27 @@
 .form-actions .accept:hover{background:#982d2b}
 .form-actions button:disabled{opacity:.6;cursor:wait}
 input:disabled{opacity:.7}
+
+/* A completed challenge gets its own celebration, separate from the login intro. */
+.login-card--success{border-color:#c8dac7;background:radial-gradient(ellipse at top,#f4f8e9 0,transparent 65%),#fff;box-shadow:0 20px 60px #284f3c12}
+.celebration{text-align:center;padding:6px 0}
+.success-art{position:relative;display:grid;place-items:center;width:100%;max-width:340px;height:152px;margin:0 auto 18px}
+.success-trophy{width:120px;height:120px;filter:drop-shadow(0 8px 12px #92631512)}
+.confetti{position:absolute;width:8px;height:15px;border-radius:2px;background:#8bab76}
+.confetti--1{left:14%;top:24px;transform:rotate(-25deg)}
+.confetti--2{left:3%;top:78px;width:9px;height:9px;border-radius:50%;background:#e7b84f}
+.confetti--3{left:23%;bottom:12px;transform:rotate(28deg);background:#d99683}
+.confetti--4{left:30%;top:3px;width:6px;height:10px;transform:rotate(35deg);background:#e7b84f}
+.confetti--5{right:14%;top:22px;transform:rotate(28deg);background:#d99683}
+.confetti--6{right:3%;top:82px;width:9px;height:9px;border-radius:50%;background:#8bab76}
+.confetti--7{right:23%;bottom:10px;transform:rotate(-28deg);background:#e7b84f}
+.confetti--8{right:30%;top:4px;width:6px;height:10px;transform:rotate(-35deg)}
+.success-eyebrow{color:#866222;margin-bottom:12px}
+.success-title{font-size:clamp(28px,6vw,38px);line-height:1.15;letter-spacing:-1.2px;margin:0 0 18px;color:#1c3d2c}
+.success-title:focus{outline:none}
+.completion-badge{display:inline-block;margin:0;padding:7px 12px;border:1px solid #b7cdae;border-radius:999px;background:#eaf3e5;color:var(--green);font-size:10px;font-weight:650;letter-spacing:1px;text-transform:uppercase}
+.success-copy{margin:20px 0 28px;color:#596d5e;font-size:14px;line-height:1.8}
+.success-actions{display:grid;gap:10px;text-align:left}
+.success-actions .submit{margin:0;gap:12px;min-height:48px}
+.success-actions .success-retry{border:1px solid var(--border);background:transparent;color:var(--green);font-weight:500}
+.success-actions .success-retry:hover{background:#f2f6ed;border-color:#9bb795}
