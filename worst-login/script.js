@@ -206,9 +206,9 @@
     message.textContent = '';
   }));
 
-  // This intentionally awkward prototype requires typing the displayed details.
-  // Cover context menus and drag/drop as well as keyboard clipboard shortcuts.
-  ['copy', 'cut', 'paste', 'dragstart', 'drop'].forEach(type => {
+  // The demo details can be copied, but entering them requires typing.
+  // Block paste from context menus and keyboard shortcuts, plus drag/drop.
+  ['cut', 'paste', 'dragstart', 'drop'].forEach(type => {
     form.addEventListener(type, event => event.preventDefault());
   });
   form.addEventListener('beforeinput', event => {

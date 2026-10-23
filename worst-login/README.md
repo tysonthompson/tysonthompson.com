@@ -42,7 +42,7 @@ The live demos are not pinned and can change or become unavailable. Their URLs a
 - **Back to sign in** or Escape closes the dialog, removes the game to stop audio/animations, and cancels the pending sign-in while preserving the entered credentials. Accept starts a fresh challenge.
 - **Restart challenge** replaces the current game and continues waiting for completion with the same credentials. Editing credentials cancels a pending attempt.
 - Successful verification removes the game frame. Returning from the success screen or restoring the page with Back/Forward resets to the empty credential form without loading a game.
-- Copy, cut, paste, and drag/drop are blocked within the credential form, and the displayed demo values cannot be selected. Users must type the credentials; normal typing and editing remain available. These are intentional prototype interactions, not a security boundary.
+- The displayed demo values can be selected and copied, but cut, paste, and drag/drop are blocked within the credential form. Users must type the credentials; normal typing and editing remain available. These are intentional prototype interactions, not a security boundary.
 
 Each challenge uses a sandboxed `allow-scripts` iframe with no same-origin privilege and no referrer. A completion is accepted only for the exact string `success` from the current frame's window with its expected opaque origin. No credentials are passed to a frame. The native 400×300 (Easy) or 390×300 (Medium/Hard) stage scales down to fit narrow screens.
 
