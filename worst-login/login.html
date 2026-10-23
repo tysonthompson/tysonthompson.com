@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A fictional login prototype for a design assignment.">
   <title>Sign in · Ordinary</title>
-  <link rel="stylesheet" href="styles.css?v=20261020-captcha">
+  <link rel="stylesheet" href="styles.css?v=20261023-visible-credentials">
   <script src="script.js?v=20261021-keep-verification" defer></script>
 </head>
 <body>
@@ -18,6 +18,14 @@
       <p class="intro">A little less friction. A little more focus.</p>
       <p id="difficulty-label" class="difficulty-label">Human verification</p>
       <form id="login-form" novalidate>
+        <aside class="demo-credentials" aria-labelledby="demo-credentials-title">
+          <h2 id="demo-credentials-title">Demo sign-in details</h2>
+          <p>Enter these exactly, then complete the CAPTCHA.</p>
+          <dl>
+            <div><dt>Email address</dt><dd><code>demo@example.com</code></dd></div>
+            <div><dt>Password</dt><dd><code>password123</code></dd></div>
+          </dl>
+        </aside>
         <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="off" required aria-describedby="email-error"><p class="error" id="email-error"></p></div>
         <div class="field"><label for="password">Password</label><div class="password-wrap"><input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="off" required aria-describedby="password-error"><button id="show-password" class="show-password" type="button" aria-label="Show password" aria-pressed="false">Show</button></div><p class="error" id="password-error"></p></div>
         <section class="captcha" aria-labelledby="captcha-title" aria-describedby="captcha-description">
@@ -38,7 +46,7 @@
         <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
       </form>
       <div id="success" hidden><p class="success-text">You're signed in.</p><p class="intro">You made it to the demo workspace.</p><button id="sign-out" class="submit" type="button">Back to sign in <span aria-hidden="true">↩</span></button></div>
-      <aside class="demo-note"><span class="demo-dot" aria-hidden="true"></span><div><strong>Just a prototype.</strong><p>Use <b>demo@example.com</b> and <b>password123</b>.<br>Demo credentials stay in this page. The CAPTCHA loads from its author's public demo and needs a connection.</p></div></aside>
+      <aside class="demo-note"><span class="demo-dot" aria-hidden="true"></span><div><strong>Just a prototype.</strong><p>Demo credentials stay in this page. The CAPTCHA loads from its author's public demo and needs a connection.</p></div></aside>
     </section>
   </main>
   <footer><span>Ordinary © 2026</span><span>An intentionally ordinary starting point.</span><span>CLASSROOM PROTOTYPE</span></footer>
