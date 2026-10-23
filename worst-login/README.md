@@ -43,7 +43,7 @@ The live demos are not pinned and can change or become unavailable. Their URLs a
 - **Restart challenge** replaces the current game and continues waiting for completion with the same credentials. Editing credentials cancels a pending attempt.
 - Successful verification removes the game frame. Returning from the success screen or restoring the page with Back/Forward resets to the empty credential form without loading a game.
 - Completion replaces the sign-in heading with a congratulations screen and a badge for the finished difficulty. **Choose another difficulty** returns to the difficulty menu; **Try this difficulty again** starts a fresh sign-in for the current mode.
-- The displayed demo values can be selected and copied, but cut, paste, and drag/drop are blocked within the credential form. Users must type the credentials; normal typing and editing remain available. These are intentional prototype interactions, not a security boundary.
+- The displayed demo values can be selected and copied, but cut, paste, and drag/drop are blocked within the credential form. A paste attempt displays **Pasting is not allowed!**, which clears when the user types. Users must type the credentials; normal typing and editing remain available. These are intentional prototype interactions, not a security boundary.
 
 Each challenge uses a sandboxed `allow-scripts` iframe with no same-origin privilege and no referrer. A completion is accepted only for the exact string `success` from the current frame's window with its expected opaque origin. No credentials are passed to a frame. The native 400×300 (Easy) or 390×300 (Medium/Hard) stage scales down to fit narrow screens.
 

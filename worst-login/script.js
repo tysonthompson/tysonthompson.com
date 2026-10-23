@@ -215,11 +215,19 @@
 
   // The demo details can be copied, but entering them requires typing.
   // Block paste from context menus and keyboard shortcuts, plus drag/drop.
-  ['cut', 'paste', 'dragstart', 'drop'].forEach(type => {
+  function rejectPaste(event) {
+    event.preventDefault();
+    message.textContent = 'Pasting is not allowed!';
+  }
+
+  form.addEventListener('paste', rejectPaste);
+  ['cut', 'dragstart', 'drop'].forEach(type => {
     form.addEventListener(type, event => event.preventDefault());
   });
   form.addEventListener('beforeinput', event => {
-    if (['insertFromPaste', 'insertFromPasteAsQuotation', 'insertFromDrop'].includes(event.inputType)) {
+    if (['insertFromPaste', 'insertFromPasteAsQuotation'].includes(event.inputType)) {
+      rejectPaste(event);
+    } else if (event.inputType === 'insertFromDrop') {
       event.preventDefault();
     }
   });
