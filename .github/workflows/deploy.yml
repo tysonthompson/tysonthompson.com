@@ -5,6 +5,10 @@ on:
     branches:
       - main  # Triggers the deployment on every push to the main branch
 
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
 jobs:
   web-deploy:
     name: Production Deploy
@@ -13,6 +17,41 @@ jobs:
     steps:
     - name: 🚚 Get latest code
       uses: actions/checkout@v4
+
+    - name: Set up PHP for Folio checks
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: dom, session, json
+        coverage: none
+
+    - name: Test document persistence and permissions
+      run: php googledocs/tests/backend.php
+
+    - name: Verify the HTTP document workflow
+      run: |
+        php -S 127.0.0.1:8087 -t . > /tmp/folio-php.log 2>&1 &
+        server_pid=$!
+        trap 'kill "$server_pid"' EXIT
+        for attempt in {1..20}; do
+          if curl --silent --fail 'http://127.0.0.1:8087/googledocs/api.php?action=bootstrap' > /dev/null; then break; fi
+          sleep 0.2
+        done
+        python3 googledocs/tests/http_test.py http://127.0.0.1:8087/googledocs/
+
+    - name: Set up Node for the editor bundle
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: npm
+        cache-dependency-path: googledocs/package-lock.json
+
+    - name: Build and test Folio
+      working-directory: googledocs
+      run: |
+        npm ci
+        npm test
+        npm run build
     
     - name: 🚀 Sync files via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -23,3 +62,16 @@ jobs:
         # If your cPanel FTP account points directly to public_html, leave this as ./
         # Otherwise, specify the subfolder here (e.g., server-dir: public_html/)
         server-dir: ./ 
+        # Preserve live document data; publish only application assets and PHP.
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          googledocs/storage/data.php
+          googledocs/storage/*.lock
+          googledocs/storage/*.tmp*
+          googledocs/storage/.data-*.tmp.php
+          googledocs/tests/**
+          googledocs/src/**
+          googledocs/package*.json
+          googledocs/build.mjs

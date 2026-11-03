@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f7f5">
+  <meta name="description" content="A little space for your next big idea. Folio is a simple, shared document workspace.">
+  <title>Folio — Your document workspace</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%235f57cf'/%3E%3Cpath d='M13 11h16v5H18v5h9v5h-9v6h-5z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./assets/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to workspace</a>
+  <div id="app"><div class="initial-loading"><div class="brand-mark">f</div><p>Opening your workspace…</p></div></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="modal" aria-labelledby="dialog-title"></dialog>
+  <input type="file" id="import-file" accept=".txt,.md,text/plain,text/markdown" hidden>
+</body>
+</html>
