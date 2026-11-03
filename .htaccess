@@ -1,0 +1,4 @@
+RewriteEngine On
+
+# Serve the resume PDF at a stable, shareable URL.
+RewriteRule ^resume/?$ Tyson_Thompson_Resume.pdf [L]
